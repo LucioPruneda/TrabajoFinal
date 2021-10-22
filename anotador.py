@@ -1,6 +1,5 @@
-#! /usr/bin/python3
 from nota import Nota
-
+from repositorioNota import RepositorioNota
 
 class Anotador:
     '''Representa una colección de Notas que se pueden etiquetar, modificar, y
@@ -8,21 +7,18 @@ class Anotador:
 
     def __init__(self):
         '''Inicializa el anotador con una lista vacía de Notas'''
-        self.notas = []
-        self.notas.append(Nota("Estudiar Ingles", "Urquiza"))
-        self.notas.append(Nota("Comprar pan", "super"))
-        self.notas.append(Nota("Llevar a Rita a la veterinaria", "Veronica"))
-        # Para facilitar las pruebas, podrías inicializarlo con dos o tres
-        # notas precargadas, para evitar cargarlas a mano cada vez que se
-        # ejecuta el programa.
+        self.repo = RepositorioNota()
+        self.notas = self.repo.get_all()
+       
 
     def nueva_nota(self, texto, etiquetas=''):
         '''Crea una nueva nota y la agrega a la lista de notas'''
 
         n_nota = Nota(texto, etiquetas)
+        self.repo.store(n_nota)
         self.notas.append(n_nota)
 
-        # TODO: Construir este método.
+        
 
     def _buscar_por_id(self, id_nota):
         '''Buscar la nota con el id dado'''
@@ -47,6 +43,7 @@ class Anotador:
         # Si lo encontró, actualiza el texto de la nota y retorna True:
         if nota:
             nota.texto = texto
+            self.repo.update(nota)
             return True
         # pero si no lo encontró, retorna False:
         return False
@@ -56,6 +53,7 @@ class Anotador:
         nota = self._buscar_por_id(id_nota)
         if nota:
             nota.etiquetas = etiquetas
+            self.repo.update(etiquetas)
             return True
 
         return False
